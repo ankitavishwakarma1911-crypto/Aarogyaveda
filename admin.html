@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌿 AarogyaVeda - Central Admin Panel & Management Dashboard</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6.5 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       LOGIN OVERLAY (Active if not signed in)
+       ========================================================================= -->
+  <div id="login-overlay" class="modal-overlay">
+    <div class="modal-box" style="max-width: 420px; text-align: center;">
+      <div style="padding: 32px 28px 12px;">
+        <div class="sidebar-brand-badge" style="width: 56px; height: 56px; margin: 0 auto 16px; font-size: 26px;">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--text-primary);">Aarogya<span>Veda</span> Admin</h2>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Secure Clinic & OPD Management Portal</p>
+      </div>
+
+      <form id="admin-login-form" style="padding: 16px 28px 28px; text-align: left;">
+        <div class="form-group">
+          <label for="login-username"><i class="fa-solid fa-user-shield"></i> Username</label>
+          <input type="text" id="login-username" class="form-control" placeholder="admin" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="login-password"><i class="fa-solid fa-lock"></i> Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 10px 12px; border-radius: var(--radius-sm); font-size: 11px; color: var(--text-secondary); margin-bottom: 16px;">
+          <i class="fa-solid fa-key"></i> <strong>Default Credentials:</strong><br>
+          Username: <code>admin</code> &nbsp;|&nbsp; Password: <code>admin123</code>
+        </div>
+
+        <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px;">
+          <i class="fa-solid fa-right-to-bracket"></i> Sign In to Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MAIN ADMIN SHELL
+       ========================================================================= -->
+  <div class="admin-wrapper" id="admin-app" style="display: none;">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand-badge">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <div>
+          <div class="sidebar-brand-title">Aarogya<span>Veda</span></div>
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a class="sidebar-link active" data-view="dashboard">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="enquiries">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Form Submissions</span>
+            <span class="menu-badge badge-new" id="badge-new-enquiries">0 New</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="appointments">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Appointments</span>
+            <span class="menu-badge badge-emergency" id="badge-emergency-apts">0</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="cms">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Clinic Info & Services</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="activities">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Activity Logs</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="settings">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Security & Settings</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <a href="/" target="_blank" class="public-site-btn">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Patient Website
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Top Navigation Bar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-toggle-btn" title="Toggle Sidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-heading">
+            <h1 id="current-view-title">Admin Dashboard</h1>
+            <p id="current-view-subtitle">Real-time clinic activity, enquiries & appointments</p>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Real-Time Auto-Refresh Control -->
+          <div class="refresh-control" title="Auto-refresh frequency">
+            <span class="pulse-dot"></span>
+            <i class="fa-solid fa-rotate" style="font-size: 11px; color: var(--text-muted);"></i>
+            <select id="auto-refresh-select">
+              <option value="15000">15s Live</option>
+              <option value="30000" selected>30s</option>
+              <option value="60000">60s</option>
+              <option value="0">Manual</option>
+            </select>
+          </div>
+
+          <button id="manual-refresh-btn" class="action-icon-btn" title="Refresh Now">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+
+          <!-- Live Digital Clock -->
+          <div class="clock-display">
+            <i class="fa-regular fa-clock"></i>
+            <span id="admin-clock">--:--:--</span>
+          </div>
+
+          <!-- Theme Switcher -->
+          <button class="theme-toggle-btn" id="admin-theme-toggle" title="Toggle Dark/Light">
+            <i class="fa-solid fa-moon" id="admin-theme-icon"></i>
+          </button>
+
+          <!-- User Profile & Logout -->
+          <div class="admin-profile">
+            <div class="admin-avatar" id="admin-avatar">AD</div>
+            <span class="admin-name" id="admin-name-display">Admin</span>
+            <button class="logout-btn" id="admin-logout-btn" title="Sign Out">
+              <i class="fa-solid fa-power-off"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Views Container -->
+      <div class="admin-content">
+
+        <!-- ===================================================================
+             VIEW 1: 📊 DASHBOARD OVERVIEW
+             =================================================================== -->
+        <section id="view-dashboard" class="view-section active">
+          <!-- KPI Statistics Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div>
+                <p class="stat-label">Total Form Submissions</p>
+                <h3 class="stat-val" id="stat-enquiries-total">0</h3>
+                <span class="stat-sub"><strong id="stat-enquiries-new" style="color: var(--warning-amber);">0</strong> New awaiting reply</span>
+              </div>
+              <div class="stat-icon icon-gold">
+                <i class="fa-solid fa-envelope-open-text"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <p class="stat-label">Total Appointments</p>
+                <h3 class="stat-val" id="stat-apts-total">0</h3>
+                <span class="stat-sub"><strong id="stat-apts-today" style="color: var(--brand-emerald);">0</strong> scheduled today</span>
+              </div>
+              <div class="stat-icon icon-blue">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <p class="stat-label">Pending / New Bookings</p>
+                <h3 class="stat-val" id="stat-apts-pending" style="color: var(--warning-amber);">0</h3>
+                <span class="stat-sub">Needs doctor confirmation</span>
+              </div>
+              <div class="stat-icon icon-purple">
+                <i class="fa-solid fa-hourglass-half"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <p class="stat-label">Confirmed Appointments</p>
+                <h3 class="stat-val" id="stat-apts-confirmed" style="color: var(--success-green);">0</h3>
+                <span class="stat-sub">OPD slot allocated</span>
+              </div>
+              <div class="stat-icon icon-green">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <p class="stat-label">Emergency Triaged</p>
+                <h3 class="stat-val" id="stat-apts-emergency" style="color: var(--emergency-red);">0</h3>
+                <span class="stat-sub">High priority critical cases</span>
+              </div>
+              <div class="stat-icon icon-red">
+                <i class="fa-solid fa-bolt-lightning"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div>
+                <p class="stat-label">Completed Consultations</p>
+                <h3 class="stat-val" id="stat-apts-completed">0</h3>
+                <span class="stat-sub"><span id="stat-apts-cancelled" style="color: var(--emergency-red);">0</span> cancelled/rejected</span>
+              </div>
+              <div class="stat-icon icon-emerald">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Bar -->
+          <div class="action-bar">
+            <div class="action-bar-left">
+              <span style="font-size: 13px; font-weight: 700; color: var(--text-secondary);">
+                <i class="fa-solid fa-bolt"></i> Quick Controls:
+              </span>
+              <button class="btn btn-secondary btn-sm" onclick="navigateTo('appointments', { filter: 'today' })">
+                <i class="fa-solid fa-calendar-day"></i> View Today's OPD Queue
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="navigateTo('enquiries', { status: 'New' })">
+                <i class="fa-solid fa-envelope"></i> Review New Enquiries
+              </button>
+            </div>
+            <div class="action-bar-right">
+              <a href="/api/admin/export/appointments" class="btn btn-secondary btn-sm export-btn" id="export-apts-link">
+                <i class="fa-solid fa-file-excel"></i> Export Appointments (CSV)
+              </a>
+              <a href="/api/admin/export/enquiries" class="btn btn-secondary btn-sm export-btn" id="export-enq-link">
+                <i class="fa-solid fa-file-csv"></i> Export Enquiries (CSV)
+              </a>
+            </div>
+          </div>
+
+          <!-- Split Two-Column Grid: Recent Enquiries & Recent Activities -->
+          <div class="split-dashboard-grid">
+            <!-- Left: Recent Form Submissions -->
+            <div class="dashboard-panel-card">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <i class="fa-solid fa-inbox" style="color: var(--ayur-gold);"></i> Recent Website Enquiries
+                </h2>
+                <a class="view-all-link" onclick="navigateTo('enquiries')">View All Submissions &rarr;</a>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Patient / Sender</th>
+                      <th>Subject / Therapy</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-recent-enquiries-body">
+                    <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Loading enquiries...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right: System Activity Audit Stream -->
+            <div class="dashboard-panel-card">
+              <div class="panel-header">
+                <h2 class="panel-title">
+                  <i class="fa-solid fa-clock-rotate-left" style="color: var(--brand-emerald);"></i> Recent System Activities
+                </h2>
+                <a class="view-all-link" onclick="navigateTo('activities')">View Full Audit Log &rarr;</a>
+              </div>
+
+              <div class="activity-stream" id="dashboard-recent-activities-stream">
+                <p style="color: var(--text-muted); font-size: 13px;">Loading activity history...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             VIEW 2: 📝 FORM SUBMISSIONS MANAGEMENT
+             =================================================================== -->
+        <section id="view-enquiries" class="view-section">
+          <!-- Action Bar: Search & Filters -->
+          <div class="action-bar">
+            <div class="action-bar-left">
+              <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="enquiry-search" placeholder="Search by name, phone, email, subject...">
+              </div>
+
+              <select id="enquiry-status-filter" class="filter-select">
+                <option value="all">All Statuses</option>
+                <option value="New">🟡 New</option>
+                <option value="In-Progress">🔵 In-Progress</option>
+                <option value="Resolved">🟢 Resolved</option>
+                <option value="Archived">⚪ Archived</option>
+              </select>
+            </div>
+
+            <div class="action-bar-right">
+              <a href="/api/admin/export/enquiries" class="btn btn-secondary btn-sm export-btn">
+                <i class="fa-solid fa-file-arrow-down"></i> Export to CSV
+              </a>
+            </div>
+          </div>
+
+          <!-- Enquiries Table -->
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Patient / Sender</th>
+                  <th>Contact Details</th>
+                  <th>Department / Subject</th>
+                  <th>Message Excerpt</th>
+                  <th>Status</th>
+                  <th>Submitted At</th>
+                  <th style="text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="enquiries-table-body">
+                <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading form submissions...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-wrap">
+            <div class="pagination-info" id="enquiries-page-info">Showing 0 of 0 submissions</div>
+            <div class="pagination-buttons" id="enquiries-pagination-btns"></div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             VIEW 3: 📅 APPOINTMENT MANAGEMENT
+             =================================================================== -->
+        <section id="view-appointments" class="view-section">
+          <!-- Action Bar: Search & Filters -->
+          <div class="action-bar">
+            <div class="action-bar-left">
+              <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="apt-search" placeholder="Search patient, phone, doctor, therapy...">
+              </div>
+
+              <select id="apt-status-filter" class="filter-select">
+                <option value="all">All Statuses</option>
+                <option value="Pending">🟡 Pending</option>
+                <option value="Confirmed">🟢 Confirmed</option>
+                <option value="Completed">🔵 Completed</option>
+                <option value="Cancelled">🔴 Cancelled</option>
+                <option value="Rejected">❌ Rejected</option>
+              </select>
+
+              <select id="apt-priority-filter" class="filter-select">
+                <option value="all">All Priorities</option>
+                <option value="Emergency">⚡ Emergency Priority</option>
+                <option value="Routine">🌿 Routine Wellness</option>
+              </select>
+
+              <input type="date" id="apt-date-filter" class="filter-select" title="Filter by date">
+            </div>
+
+            <div class="action-bar-right">
+              <button class="btn btn-secondary btn-sm" id="apt-clear-filters-btn">
+                <i class="fa-solid fa-filter-circle-xmark"></i> Clear Filters
+              </button>
+              <a href="/api/admin/export/appointments" class="btn btn-secondary btn-sm export-btn">
+                <i class="fa-solid fa-file-arrow-down"></i> Export to CSV
+              </a>
+            </div>
+          </div>
+
+          <!-- Appointments Table -->
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Phone / WhatsApp</th>
+                  <th>Doctor & Therapy</th>
+                  <th>Slot (Date & Time)</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Pre-Empted</th>
+                  <th style="text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="appointments-table-body">
+                <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading appointments...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-wrap">
+            <div class="pagination-info" id="appointments-page-info">Showing 0 of 0 appointments</div>
+            <div class="pagination-buttons" id="appointments-pagination-btns"></div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             VIEW 4: 🌐 WEBSITE CONTENT MANAGEMENT (CMS)
+             =================================================================== -->
+        <section id="view-cms" class="view-section">
+          <!-- CMS Tabs -->
+          <div class="cms-tabs">
+            <button class="cms-tab-btn active" data-cms-tab="general">
+              <i class="fa-solid fa-hospital"></i> Clinic Info & Helpline
+            </button>
+            <button class="cms-tab-btn" data-cms-tab="hero">
+              <i class="fa-solid fa-image"></i> Hero Banner & Tagline
+            </button>
+            <button class="cms-tab-btn" data-cms-tab="services">
+              <i class="fa-solid fa-leaf"></i> Clinical Departments & Services
+            </button>
+            <button class="cms-tab-btn" data-cms-tab="doctors">
+              <i class="fa-solid fa-user-doctor"></i> Specialist Doctors Panel
+            </button>
+          </div>
+
+          <!-- Tab A: General Clinic Info & Helpline -->
+          <div id="cms-tab-content-general" class="cms-tab-content">
+            <div class="cms-form-card">
+              <h3 style="margin-bottom: 16px; font-size: 16px;"><i class="fa-solid fa-circle-info"></i> Clinic Contact Details & Hotline</h3>
+              <form id="cms-general-form">
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label>Brand Title</label>
+                    <input type="text" id="cms-brand-name" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Tagline</label>
+                    <input type="text" id="cms-tagline" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label>24/7 Helpline Phone</label>
+                    <input type="text" id="cms-helpline-phone" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Official Email</label>
+                    <input type="email" id="cms-email" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label>OPD Timings</label>
+                    <input type="text" id="cms-opd-hours" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Emergency Badge Banner</label>
+                    <input type="text" id="cms-emergency-notice" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Physical Address</label>
+                  <input type="text" id="cms-address" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Save & Publish Clinic Info
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Tab B: Hero Banner -->
+          <div id="cms-tab-content-hero" class="cms-tab-content" style="display: none;">
+            <div class="cms-form-card">
+              <h3 style="margin-bottom: 16px; font-size: 16px;"><i class="fa-solid fa-newspaper"></i> Hero Section Visuals & Copy</h3>
+              <form id="cms-hero-form">
+                <div class="form-group">
+                  <label>Hero Badge Tag</label>
+                  <input type="text" id="cms-hero-tag" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                  <label>Hero Main Heading</label>
+                  <input type="text" id="cms-hero-title" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                  <label>Hero Subtitle / Description</label>
+                  <textarea id="cms-hero-desc" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Hero Image Path or URL</label>
+                  <input type="text" id="cms-hero-image" class="form-control" placeholder="hero_ayurveda.jpg" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Save & Publish Hero Banner
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Tab C: Clinical Services & Departments -->
+          <div id="cms-tab-content-services" class="cms-tab-content" style="display: none;">
+            <div class="cms-form-card">
+              <h3 style="margin-bottom: 16px; font-size: 16px;"><i class="fa-solid fa-leaf"></i> Clinical Departments & Therapies</h3>
+              <div id="cms-services-list"></div>
+              <button type="button" class="btn btn-primary" id="cms-save-services-btn" style="margin-top: 16px;">
+                <i class="fa-solid fa-floppy-disk"></i> Save Services Catalog
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab D: Doctors Panel -->
+          <div id="cms-tab-content-doctors" class="cms-tab-content" style="display: none;">
+            <div class="cms-form-card">
+              <h3 style="margin-bottom: 16px; font-size: 16px;"><i class="fa-solid fa-user-doctor"></i> Consulting Ayurvedic Physicians Panel</h3>
+              <div id="cms-doctors-list"></div>
+              <button type="button" class="btn btn-primary" id="cms-save-doctors-btn" style="margin-top: 16px;">
+                <i class="fa-solid fa-floppy-disk"></i> Save Doctors Panel
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             VIEW 5: 📜 AUDIT & ACTIVITY LOGS
+             =================================================================== -->
+        <section id="view-activities" class="view-section">
+          <div class="action-bar">
+            <span style="font-size: 13px; font-weight: 700; color: var(--text-secondary);">
+              <i class="fa-solid fa-shield-halved"></i> Activity Logs & Audit History
+            </span>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary btn-sm" onclick="loadActivities()">
+                <i class="fa-solid fa-rotate"></i> Refresh Logs
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="clearAllActivities()">
+                <i class="fa-solid fa-trash-can"></i> Clear All Activity Logs
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Action Type</th>
+                  <th>Description</th>
+                  <th>Client IP</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="activities-table-body">
+                <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination-wrap">
+            <div class="pagination-info" id="activities-page-info">Showing recent events</div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             VIEW 6: ⚙️ ADMIN SECURITY & SYSTEM SETTINGS
+             =================================================================== -->
+        <section id="view-settings" class="view-section">
+          <div class="form-grid-2">
+            <!-- Password Change Card -->
+            <div class="cms-form-card">
+              <h3 style="margin-bottom: 16px; font-size: 16px;"><i class="fa-solid fa-key"></i> Update Admin Password</h3>
+              <form id="change-password-form">
+                <div class="form-group">
+                  <label>Current Password</label>
+                  <input type="password" id="current-password" class="form-control" required autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                  <label>New Password (min 6 characters)</label>
+                  <input type="password" id="new-password" class="form-control" minlength="6" required autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                  <label>Confirm New Password</label>
+                  <input type="password" id="confirm-password" class="form-control" minlength="6" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-solid fa-shield-check"></i> Update Password
+                </button>
+              </form>
+            </div>
+
+            <!-- System Information Card -->
+            <div class="cms-form-card">
+              <h3 style="margin-bottom: 16px; font-size: 16px;"><i class="fa-solid fa-server"></i> Server & Database Environment</h3>
+              <div class="detail-grid" style="margin-bottom: 0;">
+                <div class="detail-item">
+                  <span class="detail-label">Database Engine</span>
+                  <span class="detail-val">SQLite (node:sqlite WAL mode)</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Runtime Environment</span>
+                  <span class="detail-val">Node.js Express REST API</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Token Auth</span>
+                  <span class="detail-val">JWT (HS256 Bearer Token)</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">System Status</span>
+                  <span class="detail-val" style="color: var(--success-green);"><i class="fa-solid fa-circle"></i> Operational & Healthy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 1: ENQUIRY / FORM SUBMISSION DETAILS & NOTES
+       ========================================================================= -->
+  <div id="enquiry-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-envelope-open"></i> Form Submission Details</h3>
+        <button class="modal-close-btn" onclick="closeModal('enquiry-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Sender Name</span>
+            <span class="detail-val" id="modal-enq-name">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Phone / WhatsApp</span>
+            <span class="detail-val" id="modal-enq-phone">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Email Address</span>
+            <span class="detail-val" id="modal-enq-email">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Department</span>
+            <span class="detail-val" id="modal-enq-department">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Subject</span>
+            <span class="detail-val" id="modal-enq-subject">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Received Date & Time</span>
+            <span class="detail-val" id="modal-enq-time">-</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 6px; font-weight: 700; font-size: 12px; color: var(--text-secondary);">
+          <i class="fa-solid fa-comment-dots"></i> Submitted Enquiry Message:
+        </div>
+        <div class="message-box" id="modal-enq-message">-</div>
+
+        <form id="enquiry-update-form">
+          <input type="hidden" id="modal-enq-id">
+          <div class="form-group">
+            <label for="modal-enq-status"><i class="fa-solid fa-tag"></i> Update Enquiry Status</label>
+            <select id="modal-enq-status" class="form-control">
+              <option value="New">🟡 New</option>
+              <option value="In-Progress">🔵 In-Progress</option>
+              <option value="Resolved">🟢 Resolved</option>
+              <option value="Archived">⚪ Archived</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-enq-notes"><i class="fa-solid fa-clipboard-user"></i> Internal Clinic Staff Notes</label>
+            <textarea id="modal-enq-notes" class="form-control" rows="3" placeholder="Add follow-up notes, phone call logs, remarks..."></textarea>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <a id="modal-enq-call-btn" href="#" class="btn btn-secondary btn-sm">
+              <i class="fa-solid fa-phone"></i> Call Patient
+            </a>
+            <a id="modal-enq-wa-btn" href="#" target="_blank" class="btn btn-secondary btn-sm" style="color: #15803d;">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
+            <a id="modal-enq-mail-btn" href="#" class="btn btn-secondary btn-sm">
+              <i class="fa-solid fa-envelope"></i> Email
+            </a>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('enquiry-modal')">Close</button>
+        <button class="btn btn-primary" onclick="submitEnquiryUpdate()">
+          <i class="fa-solid fa-floppy-disk"></i> Save Status & Notes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: APPOINTMENT EDIT & RESCHEDULE
+       ========================================================================= -->
+  <div id="appointment-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-calendar-pen"></i> Manage & Reschedule Appointment</h3>
+        <button class="modal-close-btn" onclick="closeModal('appointment-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="appointment-update-form">
+          <input type="hidden" id="modal-apt-id">
+
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Patient Name</span>
+              <span class="detail-val" id="modal-apt-name">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Phone Number</span>
+              <span class="detail-val" id="modal-apt-phone">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Clinical Priority</span>
+              <span class="detail-val" id="modal-apt-priority">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Original Booking Time</span>
+              <span class="detail-val" id="modal-apt-created">-</span>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="modal-apt-date"><i class="fa-regular fa-calendar-days"></i> Reschedule Date</label>
+              <input type="date" id="modal-apt-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="modal-apt-time"><i class="fa-regular fa-clock"></i> Reschedule Time Slot</label>
+              <input type="time" id="modal-apt-time" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-apt-doctor"><i class="fa-solid fa-user-doctor"></i> Assigned Doctor</label>
+            <select id="modal-apt-doctor" class="form-control" required>
+              <option value="Dr. Kavita Vishwakarma">Dr. Kavita Vishwakarma (Ayurvedic Wellness & Panchakarma)</option>
+              <option value="Dr. Rajesh Verma">Dr. Rajesh Verma (Cardiology & Heart Care)</option>
+              <option value="Dr. Ananya Iyer">Dr. Ananya Iyer (Orthopedics & Joint Basti)</option>
+              <option value="Dr. Siddharth Joshi">Dr. Siddharth Joshi (Nadi Pariksha & Pulse Diagnostics)</option>
+              <option value="Dr. Meera Nambiar">Dr. Meera Nambiar (Shirodhara & Stress Management)</option>
+              <option value="Dr. Rohan Kulkarni">Dr. Rohan Kulkarni (Spine Care & Chronic Pain Relief)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-apt-treatment"><i class="fa-solid fa-leaf"></i> Treatment / Therapy</label>
+            <input type="text" id="modal-apt-treatment" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-apt-status"><i class="fa-solid fa-tag"></i> Appointment Status</label>
+            <select id="modal-apt-status" class="form-control">
+              <option value="Pending">🟡 Pending (Awaiting Confirmation)</option>
+              <option value="Confirmed">🟢 Confirmed</option>
+              <option value="Completed">🔵 Completed</option>
+              <option value="Cancelled">🔴 Cancelled</option>
+              <option value="Rejected">❌ Rejected</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-apt-notes"><i class="fa-solid fa-notes-medical"></i> Internal Doctor & Clinic Notes</label>
+            <textarea id="modal-apt-notes" class="form-control" rows="3" placeholder="Prescription directions, pre-procedure fasting notes, clinical triage comments..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('appointment-modal')">Close</button>
+        <button class="btn btn-primary" onclick="submitAppointmentUpdate()">
+          <i class="fa-solid fa-floppy-disk"></i> Save & Apply Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Element -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Admin Controller Script -->
+  <script src="admin.js"></script>
+</body>
+</html>
+

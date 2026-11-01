@@ -1,0 +1,533 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌿 AarogyaVeda - Smart Ayurvedic Clinic & Hospital Scheduler</title>
+
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Ambient Botanical Glowing Background Orbs -->
+  <div class="bg-orb orb-herbal-1"></div>
+  <div class="bg-orb orb-herbal-2"></div>
+  <div class="bg-orb orb-gold"></div>
+
+  <!-- Top 24/7 Helpline & Patient Support Bar -->
+  <div class="top-helpline-bar">
+    <div class="helpline-left">
+      <span>🌿 24/7 Helpline & Consultations: <strong><a href="tel:+919167079548" class="helpline-link">+91
+            9167079548</a></strong></span>
+    </div>
+    <div class="helpline-right">
+      <span class="helpline-badge">🚨 24/7 Holistic Healing & Emergency Support Available</span>
+    </div>
+  </div>
+
+  <div class="app-container">
+    <!-- Official Navigation Header -->
+    <header class="glass-header">
+      <div class="brand" onclick="switchTab('homeSection')">
+        <div class="brand-badge">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <div class="brand-info">
+          <h1 class="brand-title">Aarogya<span>Veda</span></h1>
+          <p class="brand-tagline"><i class="fa-solid fa-mortar-pestle"></i> Ancient Wisdom • Modern Smart Healthcare
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Multi-Page Navigation) -->
+      <nav class="nav-tabs glass-pill">
+        <button class="nav-tab-btn active" data-target="homeSection">
+          <i class="fa-solid fa-house"></i> <span>Home</span>
+        </button>
+        <button class="nav-tab-btn" data-target="bookingSection">
+          <i class="fa-solid fa-calendar-plus"></i> <span>Book Slot</span>
+        </button>
+        <button class="nav-tab-btn" data-target="dashboardSection">
+          <i class="fa-solid fa-user-doctor"></i> <span>Doctor Portal</span>
+        </button>
+        <button class="nav-tab-btn" data-target="contactSection">
+          <i class="fa-solid fa-location-dot"></i> <span>Contact & OPD</span>
+        </button>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions">
+        <a href="/admin" target="_blank" class="admin-portal-btn glass-pill" title="Open Admin Dashboard"
+          style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:inherit; padding:6px 12px;">
+          <i class="fa-solid fa-shield-halved" style="color: #15803d;"></i>
+          <span>Admin Portal</span>
+        </a>
+        <div class="live-badge glass-pill">
+          <i class="fa-regular fa-clock"></i>
+          <span id="live-clock">--:--:--</span>
+        </div>
+        <button id="theme-toggle" class="theme-btn glass-pill" title="Toggle Theme" aria-label="Toggle Theme">
+          <i class="fa-solid fa-moon" id="theme-icon"></i>
+          <span id="theme-text">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Emergency Triaging Smart Alert Banner -->
+    <div id="smart-alert-banner" class="smart-alert hidden">
+      <div class="alert-icon-wrap">
+        <i class="fa-solid fa-bell-concierge pulse-animation"></i>
+      </div>
+      <div class="alert-content">
+        <strong id="alert-title">⚡ Emergency Auto-Preempted!</strong>
+        <span id="alert-msg">Patient prioritized and assigned immediate clinical slot.</span>
+      </div>
+      <button class="close-alert-btn" id="close-alert">&times;</button>
+    </div>
+
+    <!-- =========================================================================
+         PAGE 1: 🏠 HOME SECTION (Hero Banner, Features, Departments, Dosha Guide)
+         ========================================================================= -->
+    <section id="homeSection" class="app-section">
+      <!-- Hero Banner with Authentic Ayurvedic Visual -->
+      <div class="hero-card glass-card">
+        <div class="hero-image-wrap">
+          <img src="hero_ayurveda.jpg" alt="AarogyaVeda Authentic Ayurvedic Wellness" class="hero-img"
+            onerror="this.src='https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&auto=format&fit=crop&q=80'">
+          <div class="hero-gradient-overlay"></div>
+          <div class="hero-content">
+            <span class="hero-tag"><i class="fa-solid fa-spa"></i> Authentic Ayurvedic Healing & Zero-Wait OPD</span>
+            <h2>Your Healthiest Self, On Your Schedule</h2>
+            <p>Root-Cause Ayurvedic Wellness, Traditional Pulse Diagnostics & Real-Time Conflict-Free Doctor Scheduling.
+            </p>
+            <div class="hero-btns">
+              <button class="btn-primary" onclick="switchTab('bookingSection')">
+                <i class="fa-solid fa-calendar-check"></i> 🌿 Book Consultation
+              </button>
+              <button class="btn-secondary" onclick="switchTab('dashboardSection')">
+                <i class="fa-solid fa-list-check"></i> 👨‍⚕️ View Doctor Portal
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Feature Cards (3 Distinct USPs) -->
+      <div class="features-grid">
+        <div class="feature-card glass-card">
+          <div class="feature-icon feature-emergency"><i class="fa-solid fa-bolt-lightning"></i></div>
+          <h3>Zero-Wait Emergency</h3>
+          <p>Intelligent urgency detection automatically fast-tracks acute pain & critical patients to top priority
+            slots.</p>
+        </div>
+
+        <div class="feature-card glass-card">
+          <div class="feature-icon feature-vaidya"><i class="fa-solid fa-user-doctor"></i></div>
+          <h3>Authentic Vaidyas</h3>
+          <p>Experienced doctors specializing in Nadi Pariksha, Panchakarma detox, Spine care & Holistic Cardiology.</p>
+        </div>
+
+        <div class="feature-card glass-card">
+          <div class="feature-icon feature-conflict"><i class="fa-solid fa-shield-halved"></i></div>
+          <h3>100% Conflict-Free</h3>
+          <p>Real-time intelligent slot lock system prevents double-bookings and dynamically reorganizes schedule
+            queues.</p>
+        </div>
+      </div>
+
+      <!-- Clinical Departments Catalog -->
+      <div class="section-title-wrap" style="margin-top: 36px;">
+        <h2><i class="fa-solid fa-hospital"></i> Our Clinical Departments & Therapies</h2>
+        <p class="section-desc">Traditional Vedic science integrated with modern clinical precision</p>
+      </div>
+
+      <div class="departments-grid">
+        <div class="dept-card glass-card">
+          <div class="dept-icon"><i class="fa-solid fa-leaf"></i></div>
+          <h4>🌿 Ayurvedic & Holistic Wellness</h4>
+          <p>Panchakarma 5-fold cleanse, Nadi Pariksha, and herbal chronic illness root-healing.</p>
+        </div>
+
+        <div class="dept-card glass-card">
+          <div class="dept-icon"><i class="fa-solid fa-stethoscope"></i></div>
+          <h4>🩺 General Medicine & Tridosha</h4>
+          <p>Digestion disorders, seasonal detox, immunity boosters, and preventive wellness plans.</p>
+        </div>
+
+        <div class="dept-card glass-card">
+          <div class="dept-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+          <h4>❤️ Cardiology & Circulation</h4>
+          <p>Arjuna-based heart therapies, blood pressure balancing, and stress management.</p>
+        </div>
+
+        <div class="dept-card glass-card">
+          <div class="dept-icon"><i class="fa-solid fa-bone"></i></div>
+          <h4>🦴 Orthopedics & Joint Care</h4>
+          <p>Kati Basti, Janu Basti, spine realignment, arthritis relief, and herbal physiotherapy.</p>
+        </div>
+      </div>
+
+      <!-- Daily Ayurvedic Wisdom Card (Interactive Wellness Touch) -->
+      <div class="wisdom-card glass-card" style="margin-top: 28px;">
+        <div class="wisdom-header">
+          <i class="fa-solid fa-mortar-pestle"></i>
+          <div>
+            <h3>Tridosha Harmony & Daily Dinacharya</h3>
+            <p>Know your primary constitution (Prakriti) for balanced vitality</p>
+          </div>
+        </div>
+        <div class="dosha-chips-grid">
+          <div class="dosha-pill vata">
+            <strong>🌬️ Vata (Air & Space)</strong>
+            <span>Governs nervous system, movement & flexibility. Balanced by warm herbal Abhyanga.</span>
+          </div>
+          <div class="dosha-pill pitta">
+            <strong>🔥 Pitta (Fire & Water)</strong>
+            <span>Governs metabolism, digestion & intelligence. Balanced by cooling Shirodhara.</span>
+          </div>
+          <div class="dosha-pill kapha">
+            <strong>💧 Kapha (Earth & Water)</strong>
+            <span>Governs structure, lubrication & immunity. Balanced by stimulating Udvartana.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 2: 📅 BOOK SLOT SECTION (Clean & Focused Booking Form)
+         ========================================================================= -->
+    <section id="bookingSection" class="app-section hidden">
+      <div class="section-title-wrap">
+        <h2><i class="fa-solid fa-user-doctor"></i> Our Ayurvedic Specialists</h2>
+        <p class="section-desc">Select a doctor or customize your appointment details below</p>
+      </div>
+
+      <!-- Doctor Profiles Grid -->
+      <div class="doctors-grid" id="doctorsListContainer"></div>
+
+      <!-- Centered & Clean Booking Form Container -->
+      <div class="booking-centered-wrap">
+        <div class="form-card glass-card">
+          <div class="section-title-wrap">
+            <h2><i class="fa-solid fa-file-medical"></i> Book Clinical Consultation</h2>
+            <p class="section-desc">Fill in patient details to secure an instant consultation slot</p>
+          </div>
+
+          <form id="appointment-form">
+            <!-- Patient Name -->
+            <div class="input-group">
+              <label for="patient-name"><i class="fa-solid fa-user"></i> Patient Full Name</label>
+              <input type="text" id="patient-name" placeholder="e.g. Radhika Sharma" required autocomplete="off">
+            </div>
+
+            <!-- Phone Number -->
+            <div class="input-group">
+              <label for="patient-phone"><i class="fa-solid fa-phone"></i> Phone / WhatsApp</label>
+              <input type="tel" id="patient-phone" placeholder="e.g. +91 98765 43210" required autocomplete="off">
+            </div>
+
+            <!-- Assigned Doctor Selection (All 6 Doctors) -->
+            <div class="input-group">
+              <label for="doctor-select"><i class="fa-solid fa-user-doctor"></i> Preferred Specialist</label>
+              <select id="doctor-select" required>
+                <option value="" disabled selected>Choose Preferred Doctor</option>
+                <option value="Dr. Kavita Vishwakarma (Ayurvedic Wellness & Panchakarma)">Dr. Kavita Vishwakarma
+                  (Ayurvedic Wellness & Panchakarma - ₹1000)</option>
+                <option value="Dr. Rajesh Verma (Cardiology & Lifestyle)">Dr. Rajesh Verma (Cardiology & Heart Care -
+                  ₹850)</option>
+                <option value="Dr. Ananya Iyer (Orthopedics & Spine)">Dr. Ananya Iyer (Orthopedics & Joint Basti - ₹750)
+                </option>
+                <option value="Dr. Siddharth Joshi (Nadi Pariksha & Pulse Diagnostics)">Dr. Siddharth Joshi (Nadi
+                  Pariksha & Pulse Diagnostics - ₹900)</option>
+                <option value="Dr. Meera Nambiar (Shirodhara & Stress Management)">Dr. Meera Nambiar (Shirodhara &
+                  Stress Management - ₹800)</option>
+                <option value="Dr. Rohan Kulkarni (Spine Care & Chronic Pain Relief)">Dr. Rohan Kulkarni (Spine Care &
+                  Chronic Pain Relief - ₹950)</option>
+              </select>
+            </div>
+
+            <!-- Ayurvedic Therapy Selection (Top In-Demand Therapies) -->
+            <div class="input-group">
+              <label for="treatment-type"><i class="fa-solid fa-leaf"></i> Ayurvedic Therapy / Treatment</label>
+              <select id="treatment-type" required>
+                <option value="" disabled selected>Select Ayurvedic Therapy</option>
+                <option value="Panchakarma (Complete 5-Fold Detox)">🌿 Panchakarma (Full Body Detox & Cleanse)</option>
+                <option value="Shirodhara (Stress & Sleep Therapy)">💧 Shirodhara (Stress, Sleep & Mental Peace)
+                </option>
+                <option value="Nadi Pariksha (Pulse & Dosha Analysis)">🫀 Nadi Pariksha (Pulse Diagnosis)</option>
+                <option value="Abhyanga (Warm Herbal Oil Massage)">🪔 Abhyanga (Full Body Medicated Oil Massage)
+                </option>
+                <option value="Potli Massage (Kizhi Pain Relief)">🍃 Potli Massage (Herbal Pain & Rejuvenation)</option>
+                <option value="Kati Basti (Spine & Lower Back Care)">🦴 Kati Basti (Spine & Lower Back Care)</option>
+                <option value="Janu Basti (Knee Joint & Mobility Care)">🦵 Janu Basti (Knee Joint & Mobility Care)
+                </option>
+                <option value="Acute Dosha Distress / Urgent Care">⚡ Acute Pain & Emergency Consultation</option>
+              </select>
+            </div>
+
+            <!-- Date & Time Row -->
+            <div class="form-row">
+              <div class="input-group">
+                <label for="appointment-date"><i class="fa-regular fa-calendar-days"></i> Date</label>
+                <input type="date" id="appointment-date" required>
+              </div>
+              <div class="input-group">
+                <label for="appointment-time"><i class="fa-regular fa-clock"></i> Time Slot</label>
+                <input type="time" id="appointment-time" required>
+              </div>
+            </div>
+
+            <!-- Priority Selector (Emergency Trigger) -->
+            <div class="input-group">
+              <label><i class="fa-solid fa-shield-halved"></i> Clinical Priority Level</label>
+              <div class="priority-pills">
+                <label class="priority-label routine-pill">
+                  <input type="radio" name="priority" value="Routine" checked>
+                  <span class="pill-btn"><i class="fa-solid fa-seedling"></i> Routine (Normal)</span>
+                </label>
+                <label class="priority-label emergency-pill">
+                  <input type="radio" name="priority" value="Emergency">
+                  <span class="pill-btn emergency-btn"><i class="fa-solid fa-triangle-exclamation"></i> Emergency (Top
+                    Priority)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="input-group">
+              <label for="doctor-notes"><i class="fa-regular fa-clipboard"></i> Patient Symptoms / Prakriti
+                Notes</label>
+              <textarea id="doctor-notes" rows="2"
+                placeholder="Mention acute symptoms, digestion issues, pain intensity..."></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" id="submit-btn">
+              <i class="fa-solid fa-circle-check"></i> Confirm & Book Appointment
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 3: 👨‍⚕️ DOCTOR PORTAL & OPD QUEUE DASHBOARD
+         ========================================================================= -->
+    <section id="dashboardSection" class="app-section hidden">
+      <!-- Quick Real-time Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <div class="stat-icon-box total-box"><i class="fa-solid fa-calendar-check"></i></div>
+          <div class="stat-details">
+            <h3 id="stat-total">0</h3>
+            <p>Total Consultations</p>
+          </div>
+        </div>
+
+        <div class="stat-card glass-card">
+          <div class="stat-icon-box emergency-box"><i class="fa-solid fa-heart-pulse"></i></div>
+          <div class="stat-details">
+            <h3 id="stat-emergency">0</h3>
+            <p>Emergency / Critical</p>
+          </div>
+        </div>
+
+        <div class="stat-card glass-card">
+          <div class="stat-icon-box routine-box"><i class="fa-solid fa-spa"></i></div>
+          <div class="stat-details">
+            <h3 id="stat-routine">0</h3>
+            <p>Routine Wellness</p>
+          </div>
+        </div>
+
+        <div class="stat-card glass-card">
+          <div class="stat-icon-box today-box"><i class="fa-solid fa-user-doctor"></i></div>
+          <div class="stat-details">
+            <h3 id="stat-today">0</h3>
+            <p>Today's Schedule</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Board & Live Queue -->
+      <div class="schedule-board glass-card" style="margin-top: 20px;">
+        <div class="board-header">
+          <div>
+            <h2><i class="fa-solid fa-list-check"></i> Doctor & Patient OPD Queue</h2>
+            <p class="section-desc">Live appointments with automatic priority sorting & re-allocation</p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="board-controls">
+            <div class="search-box glass-pill">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="search-input" placeholder="Search patient, therapy, phone...">
+            </div>
+
+            <div class="filter-chips">
+              <button class="filter-chip active" data-filter="all">All</button>
+              <button class="filter-chip chip-emergency" data-filter="Emergency">⚡ Emergency</button>
+              <button class="filter-chip chip-routine" data-filter="Routine">🌿 Routine</button>
+              <button class="filter-chip" data-filter="today">Today</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments List Dynamic Feed -->
+        <div class="appointments-feed" id="appointments-container"></div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state hidden">
+          <div class="empty-leaf-icon"><i class="fa-solid fa-spa"></i></div>
+          <h3>No Appointments Booked Yet</h3>
+          <p>All clinical treatment rooms are available. Book your first patient consultation from the Book Slot tab.
+          </p>
+        </div>
+
+        <!-- Board Footer -->
+        <div class="board-footer">
+          <button id="export-ics-btn" class="footer-btn glass-pill">
+            <i class="fa-solid fa-file-arrow-down"></i> Export to Calendar (.ics)
+          </button>
+          <button id="clear-all-btn" class="footer-btn glass-pill btn-danger">
+            <i class="fa-solid fa-trash-can"></i> Clear All Records
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 4: 📞 CONTACT & OPD LOCATION SECTION
+         ========================================================================= -->
+    <section id="contactSection" class="app-section hidden">
+      <div class="section-title-wrap">
+        <h2><i class="fa-solid fa-map-location-dot"></i> AarogyaVeda Clinic Location & Contact</h2>
+        <p class="section-desc">Visit our wellness center or reach out via our 24/7 dedicated helpline</p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Location & OPD Timings Card -->
+        <div class="contact-card glass-card">
+          <div class="contact-header">
+            <div class="brand-badge" style="width: 44px; height: 44px; font-size: 20px;"><i class="fa-solid fa-spa"></i>
+            </div>
+            <h3>🌿 AarogyaVeda Wellness Center</h3>
+          </div>
+          <div class="contact-details">
+            <p><i class="fa-solid fa-location-dot"></i> <strong>Address:</strong> Health Avenue, Wellness Complex,
+              Mumbai, Maharashtra</p>
+            <p><i class="fa-regular fa-clock"></i> <strong>OPD Timings:</strong> Monday – Saturday: 08:30 AM – 08:30 PM
+            </p>
+            <p><i class="fa-solid fa-phone"></i> <strong>Helpline:</strong> <a href="tel:+919167079548">+91
+                9167079548</a></p>
+            <p><i class="fa-regular fa-envelope"></i> <strong>Email:</strong> consultations@aarogyaveda.clinic</p>
+          </div>
+        </div>
+
+        <!-- Emergency Fast-Track Card -->
+        <div class="contact-card glass-card emergency-contact-card">
+          <div class="contact-header">
+            <div class="emergency-icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>🚨 24/7 Emergency Hotline</h3>
+          </div>
+          <p>For acute chest pain, trauma, severe dosha distress, or critical consultations, our scheduling system
+            automatically fast-tracks your booking to top priority.</p>
+
+          <div class="helpline-callout">
+            <span class="helpline-num">+91 9167079548</span>
+            <a href="tel:+919167079548" class="call-now-btn">
+              <i class="fa-solid fa-phone-volume"></i> Call Helpline Now
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- General Patient Enquiry & Consultation Request Form -->
+      <div class="booking-centered-wrap" style="margin-top: 32px;">
+        <div class="form-card glass-card">
+          <div class="section-title-wrap">
+            <h2><i class="fa-solid fa-paper-plane"></i> Send Us an Enquiry / Consultation Request</h2>
+            <p class="section-desc">Have questions about therapies, residential Panchakarma, or specialized treatments?
+              Fill out this form and our clinical coordinator will contact you promptly.</p>
+          </div>
+
+          <form id="patient-enquiry-form">
+            <div class="form-row">
+              <div class="input-group">
+                <label for="enq-name"><i class="fa-solid fa-user"></i> Full Name *</label>
+                <input type="text" id="enq-name" placeholder="e.g. Devendra Singhal" required autocomplete="name">
+              </div>
+              <div class="input-group">
+                <label for="enq-phone"><i class="fa-solid fa-phone"></i> Mobile / WhatsApp *</label>
+                <input type="tel" id="enq-phone" placeholder="e.g. +91 98765 43210" required autocomplete="tel">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="input-group">
+                <label for="enq-email"><i class="fa-solid fa-envelope"></i> Email Address</label>
+                <input type="email" id="enq-email" placeholder="e.g. devendra@gmail.com" autocomplete="email">
+              </div>
+              <div class="input-group">
+                <label for="enq-department"><i class="fa-solid fa-hospital-user"></i> Department / Interest</label>
+                <select id="enq-department">
+                  <option value="Ayurvedic & Holistic Wellness">🌿 Ayurvedic & Holistic Wellness (Panchakarma)</option>
+                  <option value="General Medicine & Tridosha">🩺 General Medicine & Tridosha</option>
+                  <option value="Cardiology & Circulation">❤️ Cardiology & Circulation</option>
+                  <option value="Orthopedics & Joint Care">🦴 Orthopedics & Joint Care (Basti Therapy)</option>
+                  <option value="Nadi Pariksha & Pulse Diagnostics">🫀 Nadi Pariksha & Pulse Diagnostics</option>
+                  <option value="Shirodhara & Stress Management">💧 Shirodhara & Stress Management</option>
+                  <option value="General / Other">💬 General Consultation</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="enq-subject"><i class="fa-solid fa-heading"></i> Subject</label>
+              <input type="text" id="enq-subject" placeholder="e.g. Inquiry regarding 14-day Panchakarma Detox package">
+            </div>
+
+            <div class="input-group">
+              <label for="enq-message"><i class="fa-solid fa-comment-dots"></i> Message / Questions *</label>
+              <textarea id="enq-message" rows="3"
+                placeholder="Please describe your health query, condition, or question..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="enq-submit-btn">
+              <i class="fa-solid fa-paper-plane"></i> Submit Website Enquiry
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Footer -->
+    <footer class="app-footer glass-card">
+      <div class="footer-content">
+        <p>© 2026 <strong>AarogyaVeda Clinic & Hospital</strong>. All rights reserved. • 24/7 Helpline: <strong>+91
+            9167079548</strong> • <a href="/admin" target="_blank"
+            style="color: var(--brand-green-accent); font-weight: 700; text-decoration: none;"><i
+              class="fa-solid fa-shield-halved"></i> Admin Portal</a></p>
+        <small>Powered by Intelligent Ayurvedic Priority Triaging & Conflict-Free Scheduling.</small>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="smart-scheduler.js"></script>
+</body>
+
+</html>
